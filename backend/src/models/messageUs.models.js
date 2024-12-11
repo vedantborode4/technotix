@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-const appointmentSchema = new mongoose.Schema({
+const messageUsSchema = new mongoose.Schema({
     fullName: {
         type: String,
         required: true
@@ -22,4 +22,4 @@ const appointmentSchema = new mongoose.Schema({
 }
 )
 
-export const Appointment = mongoose.model("Appointment", appointmentSchema)
+export const MessageUs = mongoose.model("MessageUs", messageUsSchema)
