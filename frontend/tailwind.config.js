@@ -5,7 +5,9 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {
+    extend: {      scrollBehavior: {
+      smooth: 'smooth',
+      },
       fontSize: {
         '4xl': ['2.5rem', {
           lineHeight: '2.75rem',
