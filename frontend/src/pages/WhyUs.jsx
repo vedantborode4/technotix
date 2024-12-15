@@ -1,5 +1,5 @@
 import React from 'react'
-import FeatureCard from '../components/cards/FeatureCard.jsx'
+import FeatureCard from "../components/cards/FeatureCard.jsx"
 import { FaRegLightbulb } from "react-icons/fa6";
 import { HiOutlineWrenchScrewdriver } from "react-icons/hi2";
 import { FaRegHandshake } from "react-icons/fa";
