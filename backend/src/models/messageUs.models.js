@@ -16,6 +16,9 @@ const messageUsSchema = new mongoose.Schema({
     message: {
         type: String
     },
+    service: {
+        type: String
+    }
 },
 {
     timestamps: true
