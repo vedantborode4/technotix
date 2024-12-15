@@ -4,7 +4,7 @@ import { FaStar } from "react-icons/fa";
 
 const TestimonialCard = ({ name, position, rating, message, image }) => {
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1">
+    <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition duration-300 ease-in-out  hover:-translate-y-1">
       <div className="flex items-center mb-4">
         {[...Array(5)].map((_, index) => (
           <FaStar
@@ -19,7 +19,7 @@ const TestimonialCard = ({ name, position, rating, message, image }) => {
       </p>
       
       <div className="flex items-center ">
-        <div className="w-12 h-12 relative mr-4">
+        <div className="w-12 h-12 mr-4">
           <img
             src={image}
             alt={name}

@@ -16,7 +16,7 @@ const Navbar = () => {
     <>
       {/* <div className="overflow-x-hidden shadow-xl w-full fixed top-0 left-0 z-50" > */}
       <div className="shadow-md w-full fixed top-0 left-0 z-50">
-        <div className="md:flex items-center justify-between bg-white py-2 md:px-10 px-7">
+        <div className="md:flex items-center justify-between bg-white py-2 md:px-10 px-7 opacity-80 ">
           <div className="font-bold text-2xl cursor-pointer flex items-center text-gray-800">
             <span className="text-3xl text-indigo-600 mr-1 ">
               <Logo />
