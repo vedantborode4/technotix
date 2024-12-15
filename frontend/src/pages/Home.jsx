@@ -1,11 +1,12 @@
 import React from 'react'
 import Nav from '../components/Navbar'
 import Btn from '../components/btn'
+import heroImage from '../assets/img/hero.jpg'
 
 function Home() {
   return (
 
-    <div className="overflow-x-hidden bg-hero-bg-img bg-cover bg-center xl:h-screen pb-24">
+    <div className="overflow-x-hidden bg-cover bg-center xl:h-screen pb-24" style={{ backgroundImage: `url(${heroImage})` }}>
       <Nav/>
       <div className=" pt-32 p-5 md:pt-32  md:w-1/2 text-white text-wrap  flex-col justify-center ">
         <div className="lg:p-10 md:px-10 flex flex-col justify-center md:justify-start ">
