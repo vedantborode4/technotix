@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FiSend } from "react-icons/fi";
+import axios from "axios";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -35,14 +36,38 @@ const ContactUs = () => {
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
+  
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+  
     if (validateForm()) {
-      console.log("Form submitted:", formData);
-      // Handle form submission logic here
+      try {
+        const response = await axios.post(`${backendURL}/message/messageUs`, {
+          fullName: formData.name,
+          email: formData.email,
+          contactNumber: formData.phone,
+          message: formData.message,
+          service: formData.service
+        });
+  
+        // console.log(response.data); // This will show "message delivered" if successful
+        // alert("Your message has been sent successfully!");
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          service: "",
+          message: "",
+        });
+      } catch (error) {
+        console.error("Error submitting the form:", error);
+        alert("Failed to send your message. Please try again later.");
+      }
     }
   };
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
