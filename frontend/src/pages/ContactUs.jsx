@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiSend } from "react-icons/fi";
-import axios from "axios";
+import appwriteService from "../appwrite/config.js";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -8,17 +8,19 @@ const ContactUs = () => {
     email: "",
     phone: "",
     service: "",
-    message: ""
+    message: "",
   });
 
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const services = [
     "Website Development",
     "Mobile Development",
     "UI/UX Design",
-    "SEO ",
-    "Maintenance and Support"
+    "SEO",
+    "Maintenance and Support",
   ];
 
   const validateForm = () => {
@@ -36,24 +38,21 @@ const ContactUs = () => {
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
-  
-  const backendURL = import.meta.env.VITE_BACKEND_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
     if (validateForm()) {
+      setIsSubmitting(true);
       try {
-        const response = await axios.post(`${backendURL}/message/messageUs`, {
-          fullName: formData.name,
+        await appwriteService.createRequests({
+          name: formData.name,
           email: formData.email,
           contactNumber: formData.phone,
           message: formData.message,
-          service: formData.service
+          service: formData.service,
         });
-  
-        // console.log(response.data); // This will show "message delivered" if successful
-        // alert("Your message has been sent successfully!");
+
+        setSuccessMessage("Your message has been sent successfully!");
         setFormData({
           name: "",
           email: "",
@@ -61,25 +60,28 @@ const ContactUs = () => {
           service: "",
           message: "",
         });
+        setErrors({});
       } catch (error) {
         console.error("Error submitting the form:", error);
-        alert("Failed to send your message. Please try again later.");
+        alert(`Failed to send your message. ${error.message || "Try again later."}`);
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
-        [name]: ""
+        [name]: "",
       }));
     }
   };
@@ -89,7 +91,7 @@ const ContactUs = () => {
       <div
         className="md:w-1/2 bg-cover bg-center mx-auto w-full rounded-t-md md:rounded-l-md md:rounded-r-none"
         style={{
-          backgroundImage: `url("https://images.unsplash.com/photo-1423666639041-f56000c27a9a?ixlib=rb-4.0.3")`
+          backgroundImage: `url("https://images.unsplash.com/photo-1423666639041-f56000c27a9a?ixlib=rb-4.0.3")`,
         }}
       >
         <div className="h-full w-full bg-black bg-opacity-50 flex items-center justify-center p-12 rounded-t-md md:rounded-l-md md:rounded-r-none">
@@ -115,12 +117,17 @@ const ContactUs = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={`mt-1 block w-full rounded-md h-10 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${errors.name ? "border-red-500" : ""}`}
+              className={`mt-1 block w-full rounded-md h-10 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
+                errors.name ? "border-red-500" : ""
+              }`}
               placeholder="Your full name"
               aria-label="Your full name"
+              aria-invalid={!!errors.name}
             />
             {errors.name && (
-              <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+              <p className="mt-1 text-sm text-red-600" role="alert">
+                {errors.name}
+              </p>
             )}
           </div>
 
@@ -137,12 +144,17 @@ const ContactUs = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`mt-1 block w-full h-10 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${errors.email ? "border-red-500" : ""}`}
+              className={`mt-1 block w-full h-10 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
+                errors.email ? "border-red-500" : ""
+              }`}
               placeholder="your.email@example.com"
               aria-label="Your email address"
+              aria-invalid={!!errors.email}
             />
             {errors.email && (
-              <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+              <p className="mt-1 text-sm text-red-600" role="alert">
+                {errors.email}
+              </p>
             )}
           </div>
 
@@ -159,12 +171,17 @@ const ContactUs = () => {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className={`mt-1 block w-full h-10 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${errors.phone ? "border-red-500" : ""}`}
+              className={`mt-1 block w-full h-10 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
+                errors.phone ? "border-red-500" : ""
+              }`}
               placeholder="Your phone number"
               aria-label="Your phone number"
+              aria-invalid={!!errors.phone}
             />
             {errors.phone && (
-              <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
+              <p className="mt-1 text-sm text-red-600" role="alert">
+                {errors.phone}
+              </p>
             )}
           </div>
 
@@ -180,8 +197,11 @@ const ContactUs = () => {
               name="service"
               value={formData.service}
               onChange={handleChange}
-              className={`mt-1 block w-full rounded-md h-10 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${errors.service ? "border-red-500" : ""}`}
+              className={`mt-1 block w-full rounded-md h-10 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
+                errors.service ? "border-red-500" : ""
+              }`}
               aria-label="Select a service"
+              aria-invalid={!!errors.service}
             >
               <option value="">Select a service</option>
               {services.map((service) => (
@@ -191,11 +211,13 @@ const ContactUs = () => {
               ))}
             </select>
             {errors.service && (
-              <p className="mt-1 text-sm text-red-600">{errors.service}</p>
+              <p className="mt-1 text-sm text-red-600" role="alert">
+                {errors.service}
+              </p>
             )}
           </div>
 
-          <div className="md:pb-8">
+          <div>
             <label
               htmlFor="message"
               className="block text-sm font-medium text-gray-700"
@@ -208,22 +230,35 @@ const ContactUs = () => {
               value={formData.message}
               onChange={handleChange}
               rows={4}
-              className={`mt-1 block w-full h-10 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${errors.message ? "border-red-500" : ""}`}
+              className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${
+                errors.message ? "border-red-500" : ""
+              }`}
               placeholder="Your message"
               aria-label="Your message"
+              aria-invalid={!!errors.message}
             />
             {errors.message && (
-              <p className="mt-1 text-sm text-red-600">{errors.message}</p>
+              <p className="mt-1 text-sm text-red-600" role="alert">
+                {errors.message}
+              </p>
             )}
           </div>
+          {successMessage && (
+            <p className="text-green-600 text-sm font-medium">{successMessage}</p>
+          )}
 
           <button
             type="submit"
-            className="w-full flex items-center justify-center py-3 px-4  border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 "
+            disabled={isSubmitting}
+            className={`w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ${
+              isSubmitting ? "opacity-70 cursor-not-allowed" : ""
+            }`}
           >
             <FiSend className="mr-2" />
-            Send Message
+            {isSubmitting ? "Sending..." : "Send Message"}
           </button>
+
+          
         </form>
       </div>
     </div>
