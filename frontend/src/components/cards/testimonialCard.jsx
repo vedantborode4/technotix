@@ -19,7 +19,7 @@ const TestimonialCard = ({ name, position, rating, message, image }) => {
       </p>
       
       <div className="flex items-center ">
-        <div className="w-12 h-12 mr-4">
+        {/* <div className="w-12 h-12 mr-4">
           <img
             src={image}
             alt={name}
@@ -28,7 +28,7 @@ const TestimonialCard = ({ name, position, rating, message, image }) => {
               e.target.src = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60";
             }}
           />
-        </div>
+        </div> */}
         <div>
           <h3 className="font-semibold text-lg text-gray-900">{name}</h3>
           <p className="text-gray-600 text-sm">{position}</p>
